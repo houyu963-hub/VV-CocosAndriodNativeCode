@@ -99,6 +99,13 @@ public interface IPlatformAdapter {
     }
 
     /**
+     * 网络状态改变
+     */
+    default void networkChangeReceiver(PlatformBridge.PlatformCallback callback) {
+        callback.onResult(-1, "Not supported", null);
+    }
+
+    /**
      * 获取平台名称
      */
     String getPlatformName();

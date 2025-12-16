@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.cocos.game.AppActivity;
 import com.cocos.sdkbridge.IPlatformAdapter;
 import com.cocos.sdkbridge.PlatformBridge;
+import com.cocos.sdkbridge.receiver.NetworkChangeReceiver;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,11 +28,24 @@ public class AndroidPlatformAdapter implements IPlatformAdapter {
     private String PLATFORM_NAME = "AndroidPlatformAdapter";
     private AppActivity sActivity;
     public Context sContext;
+    private NetworkChangeReceiver networkChangeReceiver;
 
     @Override
     public void initialize() {
         sActivity = AppActivity.getInstance();
         sContext = sActivity.getApplicationContext();
+
+        // 注册网络改变监听
+        networkChangeReceiver = new NetworkChangeReceiver();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        sActivity.registerReceiver(networkChangeReceiver, intentFilter);
+        sActivity.networkChangeReceiver = networkChangeReceiver;
+    }
+
+    public void destroy() {
+        if (networkChangeReceiver != null) {
+            sActivity.unregisterReceiver(networkChangeReceiver);
+        }
     }
 
     @Override
@@ -113,7 +128,7 @@ public class AndroidPlatformAdapter implements IPlatformAdapter {
         if (wifi.equals(NetworkInfo.State.CONNECTED)) {
             text = "DO_WIFI";
         } else if (mobile.equals(NetworkInfo.State.CONNECTED)) {
-            text = "DO_3G";
+            text = "DO_MOBILE";
         } else {
             text = "NO_CONNECTION";
         }
@@ -202,6 +217,10 @@ public class AndroidPlatformAdapter implements IPlatformAdapter {
         }
     }
 
+    @Override
+    public void networkChangeReceiver(PlatformBridge.PlatformCallback callback) {
+        networkChangeReceiver.callback = callback;
+    }
 
     @Override
     public String getPlatformName() {

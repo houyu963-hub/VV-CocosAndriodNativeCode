@@ -8,7 +8,7 @@ import com.cocos.sdkbridge.impl.AlipayPlatformAdapter;
 import com.cocos.sdkbridge.impl.AndroidPlatformAdapter;
 import com.cocos.sdkbridge.impl.WechatPlatformAdapter;
 
-import cocos.game.R;
+import cocos.vv.com.R;
 
 public class PlatformManager {
     private static PlatformManager instance;

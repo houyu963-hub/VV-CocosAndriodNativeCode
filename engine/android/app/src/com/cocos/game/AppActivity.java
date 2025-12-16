@@ -27,20 +27,22 @@ package com.cocos.game;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.cocos.sdkbridge.receiver.NetworkChangeReceiver;
 import com.cocos.service.SDKWrapper;
 import com.cocos.lib.CocosActivity;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class AppActivity extends CocosActivity {
     private static AppActivity sActivity;
-    private static ImageView sSplashBgImageView = null;
+    public static ImageView sSplashBgImageView = null;
+    public NetworkChangeReceiver networkChangeReceiver;
+
+    public static AppActivity getInstance() {
+        return sActivity;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,11 @@ public class AppActivity extends CocosActivity {
             return;
         }
         SDKWrapper.shared().onDestroy();
+
+        // 取消网络状态监听
+        if (networkChangeReceiver != null) {
+            unregisterReceiver(networkChangeReceiver);
+        }
     }
 
     @Override

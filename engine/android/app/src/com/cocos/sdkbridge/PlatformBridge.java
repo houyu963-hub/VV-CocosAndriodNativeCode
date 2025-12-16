@@ -9,6 +9,7 @@ import android.util.Log;
 import com.cocos.game.AppActivity;
 import com.cocos.lib.CocosHelper;
 import com.cocos.lib.CocosJavascriptJavaBridge;
+import com.cocos.sdkbridge.receiver.NetworkChangeReceiver;
 
 public class PlatformBridge {
     private static final String TAG = "PlatformBridge";
@@ -222,6 +223,18 @@ public class PlatformBridge {
         });
     }
 
+    // 通知网络改变
+    public static void networkChangeReceiver(final String callbackId, final String params) {
+        runOnUiThread(() -> {
+            IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+            adapter.networkChangeReceiver(new PlatformCallback() {
+                @Override
+                public void onResult(int resultCode, String message, JSONObject data) {
+                    sendResultToJs(callbackId, resultCode, message, data);
+                }
+            });
+        });
+    }
 
     // =============== 工具方法 ===============
     private static void runOnUiThread(Runnable runnable) {
