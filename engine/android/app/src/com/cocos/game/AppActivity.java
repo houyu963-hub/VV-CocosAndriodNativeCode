@@ -134,9 +134,6 @@ public class AppActivity extends CocosActivity {
         super.onLowMemory();
     }
 
-
-    /****************************************************************/
-
     // 显示闪图
     private static void showSplash() {
         sSplashBgImageView = new ImageView(sActivity);
@@ -150,32 +147,4 @@ public class AppActivity extends CocosActivity {
         );
     }
 
-    // 隐藏闪图
-    public static void hideSplash() {
-        sActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (sSplashBgImageView != null) {
-                    sSplashBgImageView.setVisibility(View.GONE);
-                }
-            }
-        });
-    }
-
-    // cocos call android
-    public static void callNative(String json) throws JSONException {
-        JSONObject jsonObject = new JSONObject(json);
-        int id = jsonObject.getInt("id");
-        String data = jsonObject.getString("data");
-        NativeCallType callType = NativeCallType.fromId(id);
-        if (callType == null) {
-            return;
-        }
-        switch (callType) {
-            case CLOSESPLASH: { // 关闭闪图
-                hideSplash();
-                break;
-            }
-        }
-    }
 }
