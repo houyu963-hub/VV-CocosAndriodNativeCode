@@ -46,6 +46,46 @@ public class WechatPlatformAdapter implements IPlatformAdapter {
     }
 
     @Override
+    public void networkAvailable(PlatformBridge.PlatformCallback callback) {
+        throw new Error("Method not implemented.");
+    }
+
+    @Override
+    public void netCheck(PlatformBridge.PlatformCallback callback) {
+        throw new Error("Method not implemented.");
+    }
+
+    @Override
+    public void sendMessage(JSONObject messageInfo, PlatformBridge.PlatformCallback callback) {
+        throw new Error("Method not implemented.");
+    }
+
+    @Override
+    public void orientation(JSONObject orientationInfo, PlatformBridge.PlatformCallback callback) {
+        throw new Error("Method not implemented.");
+    }
+
+    @Override
+    public void vibrator() {
+        throw new Error("Method not implemented.");
+    }
+
+    @Override
+    public void getDeviceId(PlatformBridge.PlatformCallback callback) {
+        throw new Error("Method not implemented.");
+    }
+
+    @Override
+    public void getPackageName(PlatformBridge.PlatformCallback callback) {
+        throw new Error("Method not implemented.");
+    }
+
+    @Override
+    public void networkChangeReceiver(PlatformBridge.PlatformCallback callback) {
+        throw new Error("Method not implemented.");
+    }
+
+    @Override
     public String getPlatformName() {
         return PLATFORM_NAME;
     }

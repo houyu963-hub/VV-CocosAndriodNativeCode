@@ -102,6 +102,12 @@ android {
     viewBinding {
         enable = true
     }
+    flavorDimensions 'channel'
+    productFlavors {
+        huawei {
+            dimension 'channel'
+        }
+    }
 }
 
 dependencies {

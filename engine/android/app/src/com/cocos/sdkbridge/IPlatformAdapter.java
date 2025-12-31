@@ -52,58 +52,42 @@ public interface IPlatformAdapter {
     /**
      * 检测网络可用
      */
-    default void networkAvailable(PlatformBridge.PlatformCallback callback) {
-        callback.onResult(-1, "Not supported", null);
-    }
+    void networkAvailable(PlatformBridge.PlatformCallback callback);
 
     /**
      * 检测网络可用类型
      */
-    default void netCheck(PlatformBridge.PlatformCallback callback) {
-        callback.onResult(-1, "Not supported", null);
-    }
+    void netCheck(PlatformBridge.PlatformCallback callback);
 
     /**
      * 调用系统短信
      */
-    default void sendMessage(JSONObject messageInfo, PlatformBridge.PlatformCallback callback) {
-        callback.onResult(-1, "Not supported", null);
-    }
+    void sendMessage(JSONObject messageInfo, PlatformBridge.PlatformCallback callback);
 
     /**
      * 设置屏幕方向
      */
-    default void orientation(JSONObject orientationInfo, PlatformBridge.PlatformCallback callback) {
-        callback.onResult(-1, "Not supported", null);
-    }
+    void orientation(JSONObject orientationInfo, PlatformBridge.PlatformCallback callback);
 
     /**
      * 震动
      */
-    default void vibrator() {
-
-    }
+    void vibrator();
 
     /**
      * 获取设备ID
      */
-    default void getDeviceId(PlatformBridge.PlatformCallback callback) {
-        callback.onResult(-1, "Not supported", null);
-    }
+    void getDeviceId(PlatformBridge.PlatformCallback callback);
 
     /**
      * 获取包名
      */
-    default void getPackageName(PlatformBridge.PlatformCallback callback) {
-        callback.onResult(-1, "Not supported", null);
-    }
+    void getPackageName(PlatformBridge.PlatformCallback callback);
 
     /**
      * 网络状态改变
      */
-    default void networkChangeReceiver(PlatformBridge.PlatformCallback callback) {
-        callback.onResult(-1, "Not supported", null);
-    }
+    void networkChangeReceiver(PlatformBridge.PlatformCallback callback);
 
     /**
      * 获取平台名称
