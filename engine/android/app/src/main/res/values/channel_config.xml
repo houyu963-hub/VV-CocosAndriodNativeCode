@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- 渠道配置 可选值: wechat, alipay, android -->
-    <string name="channel_name" translatable="false">android</string>
-</resources>

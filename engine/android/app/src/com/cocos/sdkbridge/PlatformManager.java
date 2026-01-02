@@ -1,26 +1,33 @@
 package com.cocos.sdkbridge;
 
 import android.content.Context;
-import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.cocos.game.AppActivity;
 import com.cocos.sdkbridge.impl.AlipayPlatformAdapter;
 import com.cocos.sdkbridge.impl.AndroidPlatformAdapter;
 import com.cocos.sdkbridge.impl.WechatPlatformAdapter;
 
-import cocos.vv.com.R;
 
 public class PlatformManager {
     private static PlatformManager instance;
-    private IPlatformAdapter currentAdapter;
-    private Context context;
-    private String channel;
+
+    private IPlatformAdapter alipayAdapter;
+    private IPlatformAdapter wechatAdapter;
+    private IPlatformAdapter androidAdapter;
+
+    // sdk 平台常量定义
+    public static final String PLATFORM_WECHAT = "wechat";
+    public static final String PLATFORM_ALIPAY = "alipay";
+    public static final String PLATFORM_ANDROID = "android";
 
     private static final String TAG = "PlatformManager";
 
     private PlatformManager(Context context) {
-        this.context = context.getApplicationContext();
-        loadChannelConfig();
+        wechatAdapter = new WechatPlatformAdapter();
+        alipayAdapter = new AlipayPlatformAdapter();
+        androidAdapter = new AndroidPlatformAdapter();
     }
 
     public static synchronized PlatformManager getInstance() {
@@ -33,40 +40,25 @@ public class PlatformManager {
         return instance;
     }
 
-    public IPlatformAdapter getCurrentAdapter() {
-        if (currentAdapter == null) {
-            createAdapterForCurrentChannel();
-        }
-        return currentAdapter;
+    // 获取指定平台的适配器
+    public IPlatformAdapter getAdapterByPlatform() {
+        return androidAdapter;
     }
 
-    // =============== 私有方法 ===============
-    private void loadChannelConfig() {
-        // 从配置文件读取当前渠道
-        String channel = context.getResources().getString(R.string.channel_name);
-        this.channel = channel;
-        Log.i(TAG, "Current channel: " + channel);
-    }
-
-    private void createAdapterForCurrentChannel() {
-        String channel = this.channel;
-        // 根据渠道创建对应的适配器
-        if ("wechat".equals(channel)) {
-            currentAdapter = new WechatPlatformAdapter();
-            Log.i(TAG, "WeChat platform adapter selected");
-        } else if ("alipay".equals(channel)) {
-            currentAdapter = new AlipayPlatformAdapter();
-            Log.i(TAG, "Alipay platform adapter selected");
-        } else if ("android".equals(channel)) {
-            currentAdapter = new AndroidPlatformAdapter();
-            Log.i(TAG, "android platform adapter selected");
-        } else {
-            Log.i(TAG, "platform adapter unselected");
+    public IPlatformAdapter getAdapterByPlatform(@Nullable String platform) {
+        IPlatformAdapter adapter = null;
+        switch (platform) {
+            case PLATFORM_WECHAT:
+                adapter = wechatAdapter;
+                break;
+            case PLATFORM_ALIPAY:
+                adapter = alipayAdapter;
+                break;
+            case PLATFORM_ANDROID:
+                adapter = androidAdapter;
+                break;
         }
-
-        if (currentAdapter != null) {
-            currentAdapter.initialize();
-        }
+        return adapter;
     }
 
 }

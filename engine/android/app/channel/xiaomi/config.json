@@ -1,0 +1,9 @@
+{
+  "applicationId": "com.xxx.game.xiaomi",
+  "channel": "xiaomi",
+  "appName": "小米游戏",
+  "sdk": {
+    "appId": "987654321",
+    "appKey": "xxxxxxx"
+  }
+}

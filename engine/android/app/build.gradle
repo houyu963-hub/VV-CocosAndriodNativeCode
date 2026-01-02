@@ -1,4 +1,4 @@
-import org.apache.tools.ant.taskdefs.condition.Os
+import groovy.json.JsonSlurper
 
 apply plugin: 'com.android.application'
 
@@ -6,6 +6,10 @@ RES_PATH = RES_PATH.replace("\\", "/")
 COCOS_ENGINE_PATH = COCOS_ENGINE_PATH.replace("\\", "/")
 
 buildDir = "${RES_PATH}/proj/build/${project.name ==~ /^[_a-zA-Z0-9-]+$/ ? project.name : 'CocosGame'}"
+
+// 渠道目录
+def channelDir = file("$projectDir/channel")
+
 android {
     compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
     buildToolsVersion PROP_BUILD_TOOLS_VERSION
@@ -33,6 +37,49 @@ android {
         }
     }
 
+    /**
+     * 渠道维度
+     */
+    flavorDimensions "channel"
+    productFlavors {
+
+        channelDir.eachDir { dir ->
+
+            def configFile = new File(dir, "config.json")
+            if (!configFile.exists()) return
+
+            def config = new JsonSlurper().parse(configFile)
+            def flavorName = dir.name
+
+            create(flavorName) {
+                dimension "channel"
+                applicationId config.applicationId
+
+                resValue "string", "app_name", config.appName
+
+                manifestPlaceholders = [
+                        QUICK_CHANNEL: config.channel,
+                        SDK_APP_ID   : config.sdk.appId,
+                        SDK_APP_KEY  : config.sdk.appKey
+                ]
+            }
+        }
+    }
+
+    /**
+     * APK 命名规则（强烈建议）
+     */
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def channel = variant.productFlavors[0].name
+            def env = variant.buildType.name
+            def version = defaultConfig.versionName
+
+            outputFileName =
+                    "Game_${channel}_${env}_v${version}.apk"
+        }
+    }
+
     sourceSets.main {
         java.srcDirs "../src", "src"
         res.srcDirs "../res", 'res', "${RES_PATH}/proj/res"
@@ -55,7 +102,7 @@ android {
 
     signingConfigs {
 
-       release {
+        release {
             if (project.hasProperty("RELEASE_STORE_FILE") && !RELEASE_STORE_FILE.isEmpty()) {
                 storeFile file(RELEASE_STORE_FILE)
                 storePassword RELEASE_STORE_PASSWORD
@@ -76,7 +123,7 @@ android {
             if (project.hasProperty("RELEASE_STORE_FILE")) {
                 signingConfig signingConfigs.release
             }
-                        
+
             externalNativeBuild {
                 cmake {
                     // switch HIDE_SYMBOLS to OFF to skip compilation flag `-fvisibility=hidden`
@@ -102,17 +149,11 @@ android {
     viewBinding {
         enable = true
     }
-    flavorDimensions 'channel'
-    productFlavors {
-        huawei {
-            dimension 'channel'
-        }
-    }
 }
 
 dependencies {
-    implementation fileTree(dir: '../libs', include: ['*.jar','*.aar'])
-    implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
+    implementation fileTree(dir: '../libs', include: ['*.jar', '*.aar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation fileTree(dir: "${COCOS_ENGINE_PATH}/cocos/platform/android/java/libs", include: ['*.jar'])
     implementation project(':libservice')
     implementation project(':libcocos')

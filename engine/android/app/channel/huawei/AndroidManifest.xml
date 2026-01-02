@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="auto">
+
+    <application>
+        <meta-data
+            android:name="HUAWEI_APP_ID"
+            android:value="${SDK_APP_ID}" />
+    </application>
+
+</manifest>

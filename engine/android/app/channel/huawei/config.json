@@ -1,0 +1,9 @@
+{
+  "applicationId": "com.xxx.game.huawei",
+  "channel": "huawei",
+  "appName": "华为游戏",
+  "sdk": {
+    "appId": "123456789",
+    "appKey": "abcdefg"
+  }
+}

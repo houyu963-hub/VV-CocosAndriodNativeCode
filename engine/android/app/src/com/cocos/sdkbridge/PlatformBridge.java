@@ -19,7 +19,8 @@ public class PlatformBridge {
         Log.d(TAG, "login called, callbackId: " + callbackId);
         runOnUiThread(() -> {
             try {
-                IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+                JSONObject loginInfo = new JSONObject(params);
+                IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform(loginInfo.getString("platform"));
                 adapter.login((resultCode, message, data) ->
                         sendResultToJs(callbackId, resultCode, message, data)
                 );
@@ -36,7 +37,7 @@ public class PlatformBridge {
         runOnUiThread(() -> {
             try {
                 JSONObject orderInfo = new JSONObject(params);
-                IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+                IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform(orderInfo.getString("platform"));
                 adapter.pay(orderInfo, (resultCode, message, data) ->
                         sendResultToJs(callbackId, resultCode, message, data)
                 );
@@ -56,7 +57,7 @@ public class PlatformBridge {
         runOnUiThread(() -> {
             try {
                 JSONObject shareInfo = new JSONObject(params);
-                IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+                IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform(shareInfo.getString("platform"));
                 adapter.share(shareInfo, (resultCode, message, data) ->
                         sendResultToJs(callbackId, resultCode, message, data)
                 );
@@ -75,7 +76,7 @@ public class PlatformBridge {
         Log.d(TAG, "exitApp called");
         runOnUiThread(() -> {
             try {
-                IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+                IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform();
                 adapter.exitApp();
             } catch (Exception e) {
                 Log.e(TAG, "Exit app error", e);
@@ -88,7 +89,7 @@ public class PlatformBridge {
         Log.d(TAG, "closeSplash called, params: " + params);
         runOnUiThread(() -> {
             try {
-                IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+                IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform();
                 adapter.closeSplash();
             } catch (Exception e) {
                 Log.e(TAG, "closeSplash app error", e);
@@ -101,7 +102,7 @@ public class PlatformBridge {
         Log.d(TAG, "copyStr called, params: " + params);
         runOnUiThread(() -> {
             try {
-                IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+                IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform();
                 adapter.copyStr(params, (resultCode, message, data) ->
                         sendResultToJs(callbackId, resultCode, message, data)
                 );
@@ -117,7 +118,7 @@ public class PlatformBridge {
         Log.d(TAG, "netCheck called");
         runOnUiThread(() -> {
             try {
-                IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+                IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform();
                 adapter.netCheck((resultCode, message, data) ->
                         sendResultToJs(callbackId, resultCode, message, data)
                 );
@@ -133,7 +134,7 @@ public class PlatformBridge {
         Log.d(TAG, "networkAvailable called");
         runOnUiThread(() -> {
             try {
-                IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+                IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform();
                 adapter.networkAvailable((resultCode, message, data) ->
                         sendResultToJs(callbackId, resultCode, message, data)
                 );
@@ -150,7 +151,7 @@ public class PlatformBridge {
         runOnUiThread(() -> {
             try {
                 JSONObject messageInfo = new JSONObject(params);
-                IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+                IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform();
                 adapter.sendMessage(messageInfo, new PlatformCallback() {
                     @Override
                     public void onResult(int resultCode, String message, JSONObject data) {
@@ -170,7 +171,7 @@ public class PlatformBridge {
         runOnUiThread(() -> {
             try {
                 JSONObject orientationInfo = new JSONObject(params);
-                IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+                IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform();
                 adapter.orientation(orientationInfo, new PlatformCallback() {
                     @Override
                     public void onResult(int resultCode, String message, JSONObject data) {
@@ -189,7 +190,7 @@ public class PlatformBridge {
         Log.d(TAG, "vibrator called");
         runOnUiThread(() -> {
             try {
-                IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+                IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform();
                 adapter.vibrator();
             } catch (Exception e) {
                 Log.e(TAG, "Vibrator error", e);
@@ -200,7 +201,7 @@ public class PlatformBridge {
     // 获取设备ID
     public static void getDeviceId(final String callbackId, final String params) {
         runOnUiThread(() -> {
-            IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+            IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform();
             adapter.getDeviceId(new PlatformCallback() {
                 @Override
                 public void onResult(int resultCode, String message, JSONObject data) {
@@ -213,7 +214,7 @@ public class PlatformBridge {
     // 获取应用包名
     public static void getPackageName(final String callbackId, final String params) {
         runOnUiThread(() -> {
-            IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+            IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform();
             adapter.getPackageName(new PlatformCallback() {
                 @Override
                 public void onResult(int resultCode, String message, JSONObject data) {
@@ -226,7 +227,7 @@ public class PlatformBridge {
     // 通知网络改变
     public static void networkChangeReceiver(final String callbackId, final String params) {
         runOnUiThread(() -> {
-            IPlatformAdapter adapter = PlatformManager.getInstance().getCurrentAdapter();
+            IPlatformAdapter adapter = PlatformManager.getInstance().getAdapterByPlatform();
             adapter.networkChangeReceiver(new PlatformCallback() {
                 @Override
                 public void onResult(int resultCode, String message, JSONObject data) {
