@@ -1,0 +1,9 @@
+{
+  "applicationId": "com.xxx.game.official",
+  "channel": "official",
+  "appName": "官方游戏",
+  "sdk": {
+    "appId": "555555",
+    "appKey": "xxxxxxx"
+  }
+}
