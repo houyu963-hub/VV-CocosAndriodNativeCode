@@ -78,8 +78,12 @@ android {
             def env = variant.buildType.name
             def version = defaultConfig.versionName
 
-            outputFileName =
-                    "Game_${channel}_${env}_v${version}.apk"
+            // 优先使用传入的参数
+            if (project.hasProperty('apkName')) {
+                outputFileName = project.apkName
+            } else {
+                outputFileName = "Game_${channel}_${env}_v${version}.apk"
+            }
         }
     }
 
