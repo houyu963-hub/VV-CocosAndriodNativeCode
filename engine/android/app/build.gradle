@@ -77,22 +77,14 @@ android {
             def channel = variant.productFlavors[0].name
             def env = variant.buildType.name
             def version = defaultConfig.versionName
-
-            // 优先使用传入的参数
-
             // apk文件名
             if (project.hasProperty('apkName')) {
-                outputFileName = project.apkName
+                output.outputFileName = project.apkName
             } else {
-                outputFileName = "Game_${channel}_${env}_v${version}.apk"
-            }
-            // apk输出目录
-            if (project.hasProperty('outputDir')) {
-                output.outputFile = new File(project.outputDir, outputFileName)
+                output.outputFileName = "Game_${channel}_${env}_v${version}.apk"
             }
         }
     }
-
     sourceSets.main {
         java.srcDirs "../src", "src"
         res.srcDirs "../res", 'res', "${RES_PATH}/proj/res"
@@ -161,6 +153,25 @@ android {
 
     viewBinding {
         enable = true
+    }
+}
+
+// 拷贝APK
+afterEvaluate {
+    android.applicationVariants.all { variant ->
+        def variantName = variant.name.capitalize()
+        tasks.register("copy${variantName}Apk", Copy) {
+            // 确保APK生成完成
+            dependsOn variant.assembleProvider
+            // 源目录
+            from(layout.buildDirectory.dir("outputs/apk/${variant.name}"))
+            // 目标目录
+            into(project.findProperty("outputDir") ?: "${rootDir}/apk")
+            include("*.apk")
+            doFirst {
+                println "📦 Copy APK of ${variant.name} to ${destinationDir}"
+            }
+        }
     }
 }
 
