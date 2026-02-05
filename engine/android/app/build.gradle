@@ -79,10 +79,16 @@ android {
             def version = defaultConfig.versionName
 
             // 优先使用传入的参数
+
+            // apk文件名
             if (project.hasProperty('apkName')) {
                 outputFileName = project.apkName
             } else {
                 outputFileName = "Game_${channel}_${env}_v${version}.apk"
+            }
+            // apk输出目录
+            if (project.hasProperty('outputDir')) {
+                output.outputFile = new File(project.outputDir, output.outputFile.name)
             }
         }
     }
