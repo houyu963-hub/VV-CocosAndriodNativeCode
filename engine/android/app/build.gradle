@@ -161,6 +161,8 @@ afterEvaluate {
     android.applicationVariants.all { variant ->
         def variantName = variant.name.capitalize()
         def taskName = "copy${variantName}Apk"
+        def channel = variant.productFlavors[0].name
+        def env = variant.buildType.name
 
         tasks.register(taskName, Copy) {
             dependsOn variant.assembleProvider
@@ -172,13 +174,13 @@ afterEvaluate {
                 }
             }
 
-            from layout.buildDirectory.dir("outputs/apk")
+            from layout.buildDirectory.dir("outputs/apk/${channel}/${env}")
             into project.findProperty("outputDir") ?: "${rootDir}/apk"
-            include("**/*.apk")
+            include("*.apk")
 
             doLast {
-                println "✅ ${variant.name} APK 拷贝完成!"
-                def destDir = file(project.findProperty("outputDir") ?: "${rootDir}/apk")
+                println "✅ ${variant.name} APK copied to ${project.findProperty("outputDir") ?: "${rootDir}\\apk"}!"
+                def destDir = file(project.findProperty("outputDir") ?: "${rootDir}\\apk")
                 destDir.eachFile { file ->
                     if (file.name.endsWith('.apk')) {
                         println "  - ${file.name} (${file.length()} bytes)"
