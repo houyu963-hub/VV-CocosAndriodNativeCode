@@ -160,20 +160,35 @@ android {
 afterEvaluate {
     android.applicationVariants.all { variant ->
         def variantName = variant.name.capitalize()
-        tasks.register("copy${variantName}Apk", Copy) {
-            // 确保APK生成完成
+        def taskName = "copy${variantName}Apk"
+
+        tasks.register(taskName, Copy) {
             dependsOn variant.assembleProvider
-            // 源目录
-            from(layout.buildDirectory.dir("outputs/apk/${variant.name}"))
-            // 目标目录
-            into(project.findProperty("outputDir") ?: "${rootDir}/apk")
-            include("*.apk")
+
             doFirst {
-                println "📦 Copy APK of ${variant.name} to ${destinationDir}"
+                def outputDir = file(project.findProperty("outputDir") ?: "${rootDir}/apk")
+                if (!outputDir.exists()) {
+                    outputDir.mkdirs()
+                }
+            }
+
+            from layout.buildDirectory.dir("outputs/apk")
+            into project.findProperty("outputDir") ?: "${rootDir}/apk"
+            include("**/*.apk")
+
+            doLast {
+                println "✅ ${variant.name} APK 拷贝完成!"
+                def destDir = file(project.findProperty("outputDir") ?: "${rootDir}/apk")
+                destDir.eachFile { file ->
+                    if (file.name.endsWith('.apk')) {
+                        println "  - ${file.name} (${file.length()} bytes)"
+                    }
+                }
             }
         }
     }
 }
+
 
 dependencies {
     implementation fileTree(dir: '../libs', include: ['*.jar', '*.aar'])
