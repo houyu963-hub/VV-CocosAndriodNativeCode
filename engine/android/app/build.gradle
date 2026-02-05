@@ -88,7 +88,7 @@ android {
             }
             // apk输出目录
             if (project.hasProperty('outputDir')) {
-                output.outputFile = new File(project.outputDir, output.outputFile.name)
+                output.outputDirectory = file(project.outputDir)
             }
         }
     }
