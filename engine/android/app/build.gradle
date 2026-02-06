@@ -81,7 +81,7 @@ android {
             if (project.hasProperty('apkName')) {
                 output.outputFileName = project.apkName
             } else {
-                output.outputFileName = "Game_${channel}_${env}_v${version}.apk"
+                output.outputFileName = "game_${channel}_${env}_v${version}.apk"
             }
         }
     }
